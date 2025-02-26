@@ -1,10 +1,10 @@
-﻿using Ambev.Dev.Test.Domain.Auth;
+﻿using Ambev.Dev.Test.Domain.Security;
 using FluentValidation;
 using System.Text.RegularExpressions;
 
 namespace Ambev.Dev.Test.Domain.Validation;
 
-public class CredentialsValidator : AbstractValidator<Credentials>
+public class CredentialsValidator : AbstractValidator<SignInCredentials>
 {
     public CredentialsValidator()
     {

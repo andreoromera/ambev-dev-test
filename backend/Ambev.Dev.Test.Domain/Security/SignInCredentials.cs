@@ -1,9 +1,9 @@
-﻿namespace Ambev.Dev.Test.Domain.Auth;
+﻿namespace Ambev.Dev.Test.Domain.Security;
 
 /// <summary>
 /// Credentials to sign the user in
 /// </summary>
-public class Credentials
+public class SignInCredentials
 {
     public string Email { get; set; }
     public string Password { get; set; }

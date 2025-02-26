@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ambev.Dev.Test.Application\Ambev.Dev.Test.Application.csproj" />
+    <ProjectReference Include="..\Ambev.Dev.Test.Data\Ambev.Dev.Test.Data.csproj" />
     <ProjectReference Include="..\Ambev.Dev.Test.Domain\Ambev.Dev.Test.Domain.csproj" />
   </ItemGroup>
 
