@@ -3,19 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambev.Dev.Test.Api", "Ambev.Dev.Test.Api\Ambev.Dev.Test.Api.csproj", "{82BEFE24-63D2-4E16-972A-8CDC9C604603}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.Api", "Ambev.Dev.Test.Api\Ambev.Dev.Test.Api.csproj", "{82BEFE24-63D2-4E16-972A-8CDC9C604603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambev.Dev.Test.Domain", "Ambev.Dev.Test.Domain\Ambev.Dev.Test.Domain.csproj", "{9DD58AF3-89B0-4B64-A65B-E777A6245698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.Domain", "Ambev.Dev.Test.Domain\Ambev.Dev.Test.Domain.csproj", "{9DD58AF3-89B0-4B64-A65B-E777A6245698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambev.Dev.Test.Application", "Ambev.Dev.Test.Application\Ambev.Dev.Test.Application.csproj", "{A5C130E4-E243-41AC-9124-F00FF5E5C6E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.Application", "Ambev.Dev.Test.Application\Ambev.Dev.Test.Application.csproj", "{A5C130E4-E243-41AC-9124-F00FF5E5C6E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambev.Dev.Test.Data", "Ambev.Dev.Test.Data\Ambev.Dev.Test.Data.csproj", "{B80DA300-F6AC-4951-A6C7-663DB4760AA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.Data", "Ambev.Dev.Test.Data\Ambev.Dev.Test.Data.csproj", "{B80DA300-F6AC-4951-A6C7-663DB4760AA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambev.Dev.Test.Common", "Ambev.Dev.Test.Common\Ambev.Dev.Test.Common.csproj", "{41AA5D61-CF92-4E09-A193-AB1FC77532B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.Common", "Ambev.Dev.Test.Common\Ambev.Dev.Test.Common.csproj", "{41AA5D61-CF92-4E09-A193-AB1FC77532B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ambev.Dev.Test.IoC", "Ambev.Dev.Test.IoC\Ambev.Dev.Test.IoC.csproj", "{EE3B04E9-D71C-4BF2-AD40-F515277968AD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{F914E278-5A20-4E84-A2FB-BF0807C63C23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.IoC", "Ambev.Dev.Test.IoC\Ambev.Dev.Test.IoC.csproj", "{EE3B04E9-D71C-4BF2-AD40-F515277968AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
