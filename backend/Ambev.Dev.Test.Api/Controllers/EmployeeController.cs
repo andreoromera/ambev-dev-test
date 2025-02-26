@@ -6,4 +6,9 @@ namespace Ambev.Dev.Test.Api.Controllers;
 [Route("[controller]")]
 public class EmployeeController : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        return Ok(new { EmployeeId = 1 });
+    }
 }

@@ -13,7 +13,7 @@ namespace Ambev.Dev.Test.Api.Handlers
             {
                 Title = "An error has occurred",
                 Detail = exception.Message,
-                Type = exception.GetType().FullName,
+                Type = "https://httpstatuses.com/400",
                 Status = StatusCodes.Status400BadRequest
             }, cancellationToken: cancellationToken);
 

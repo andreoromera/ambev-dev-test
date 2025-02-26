@@ -3,6 +3,7 @@ using Ambev.Dev.Test.Domain.Validation;
 using Ambev.Dev.Test.IoC.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddServices();
 builder.Services.AddRepositories();
+builder.Services.AddConfigs();
+builder.Services.AddAuth();
+
+//Configuring default authorization for all endpoints
+builder.Services.AddAuthorization(x => x.FallbackPolicy = new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser()
+    .Build());
 
 //Configuring error handling
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
@@ -20,7 +28,7 @@ builder.Services.AddProblemDetails(options =>
     {
         context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
         context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-        
+
         var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
         context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
     };
