@@ -2,6 +2,7 @@
 
 public enum Role
 {
+    Admin = 600,
     President = 500,
     Director = 400,
     Manager = 300,

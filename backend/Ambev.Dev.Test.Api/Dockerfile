@@ -13,6 +13,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Ambev.Dev.Test.Api/Ambev.Dev.Test.Api.csproj", "Ambev.Dev.Test.Api/"]
+COPY ["Ambev.Dev.Test.Application/Ambev.Dev.Test.Application.csproj", "Ambev.Dev.Test.Application/"]
+COPY ["Ambev.Dev.Test.Data/Ambev.Dev.Test.Data.csproj", "Ambev.Dev.Test.Data/"]
+COPY ["Ambev.Dev.Test.Domain/Ambev.Dev.Test.Domain.csproj", "Ambev.Dev.Test.Domain/"]
+COPY ["Ambev.Dev.Test.IoC/Ambev.Dev.Test.IoC.csproj", "Ambev.Dev.Test.IoC/"]
 RUN dotnet restore "./Ambev.Dev.Test.Api/Ambev.Dev.Test.Api.csproj"
 COPY . .
 WORKDIR "/src/Ambev.Dev.Test.Api"

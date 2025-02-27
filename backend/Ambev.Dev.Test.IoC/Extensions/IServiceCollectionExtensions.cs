@@ -1,10 +1,13 @@
 ﻿using Ambev.Dev.Test.Application.Services;
+using Ambev.Dev.Test.Data;
 using Ambev.Dev.Test.Data.Repositories;
 using Ambev.Dev.Test.Domain.Configs;
 using Ambev.Dev.Test.Domain.Contracts.Repositories;
 using Ambev.Dev.Test.Domain.Contracts.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -70,6 +73,26 @@ public static class IServiceCollectionExtensions
             });
 
         services.AddTransient(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
+
+        //Configuring default authorization for all endpoints
+        services.AddAuthorization(x => x.FallbackPolicy = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .Build());
+
+        return services;
+    }
+
+    public static IServiceCollection AddDatabase(this IServiceCollection services)
+    {
+        var serviceProvider = services.BuildServiceProvider();
+        var config = serviceProvider.GetService<IConfiguration>();
+
+        services.AddDbContext<DefaultContext>(options =>
+            options.UseNpgsql(
+                config.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("Ambev.Dev.Test.Data")
+            )
+        );
 
         return services;
     }

@@ -1,20 +1,13 @@
 ﻿using Ambev.Dev.Test.Domain.Contracts.Repositories;
 using Ambev.Dev.Test.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ambev.Dev.Test.Data.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(DefaultContext context) : IUserRepository
     {
-        public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
-        {
-            return new()
-            {
-                Id = 1,
-                Name = "José",
-                Email = email,
-                Password = "$2a$11$E4T2lxYYVNJV4GtIeiv8sebizVWxrTocqL1mOBLYca945lLzafYF2",
-                Role = Domain.Enums.Role.President
-            };
-        }
+        public async Task<User> GetByEmail(string email, CancellationToken cancellationToken) => await context
+            .Users
+            .FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower(), cancellationToken);
     }
 }

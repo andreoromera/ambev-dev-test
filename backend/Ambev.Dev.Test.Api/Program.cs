@@ -3,7 +3,6 @@ using Ambev.Dev.Test.Domain.Validation;
 using Ambev.Dev.Test.IoC.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +12,7 @@ builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddConfigs();
 builder.Services.AddAuth();
-
-//Configuring default authorization for all endpoints
-builder.Services.AddAuthorization(x => x.FallbackPolicy = new AuthorizationPolicyBuilder()
-    .RequireAuthenticatedUser()
-    .Build());
+builder.Services.AddDatabase();
 
 //Configuring error handling
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
