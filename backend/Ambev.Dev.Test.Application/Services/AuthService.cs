@@ -12,10 +12,20 @@ using Ambev.Dev.Test.Domain.Configs;
 
 namespace Ambev.Dev.Test.Application.Services;
 
+/// <summary>
+/// Authentication Service
+/// </summary>
 public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IUserRepository userRepository) : IAuthService
 {
     private readonly JwtConfig jwtConfigOptions = jwtConfigOptions.Value;
 
+    /// <summary>
+    /// Sign the user in, given the user credentials
+    /// </summary>
+    /// <remarks>
+    /// Using BCrypt implementation for stored passwords
+    /// </remarks>
+    /// <exception cref="CustomException"></exception>
     public async Task<SignInResponse> SignIn(SignInCredentials credentials, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByEmail(credentials.Email, cancellationToken);
@@ -39,6 +49,9 @@ public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IUserRepository u
         throw new CustomException("Invalid Credentials");
     }
 
+    /// <summary>
+    /// Generate a token with user claims
+    /// </summary>
     private string GenerateToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
