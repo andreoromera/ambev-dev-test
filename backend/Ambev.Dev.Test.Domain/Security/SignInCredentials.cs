@@ -1,7 +1,7 @@
 ﻿namespace Ambev.Dev.Test.Domain.Security;
 
 /// <summary>
-/// Credentials to sign the user in
+/// Credentials to sign the employee in
 /// </summary>
 public class SignInCredentials
 {

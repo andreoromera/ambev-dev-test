@@ -6,7 +6,8 @@ namespace Ambev.Dev.Test.Data;
 
 public class DefaultContext : DbContext
 {
-    public DbSet<User> Users { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<EmployeePhone> EmployeePhones { get; set; }
 
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {

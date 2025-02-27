@@ -15,12 +15,12 @@ namespace Ambev.Dev.Test.Application.Services;
 /// <summary>
 /// Authentication Service
 /// </summary>
-public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IUserRepository userRepository) : IAuthService
+public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IEmployeeRepository employeeRepository) : IAuthService
 {
     private readonly JwtConfig jwtConfigOptions = jwtConfigOptions.Value;
 
     /// <summary>
-    /// Sign the user in, given the user credentials
+    /// Sign the employee in, given the credentials
     /// </summary>
     /// <remarks>
     /// Using BCrypt implementation for stored passwords
@@ -28,20 +28,21 @@ public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IUserRepository u
     /// <exception cref="CustomException"></exception>
     public async Task<SignInResponse> SignIn(SignInCredentials credentials, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetByEmail(credentials.Email, cancellationToken);
+        var employee = await employeeRepository.GetByEmail(credentials.Email, cancellationToken);
 
-        if (user is not null)
+        if (employee is not null)
         {
-            var verified = BCrypt.Net.BCrypt.Verify(credentials.Password, user.Password);
+            var verified = BCrypt.Net.BCrypt.Verify(credentials.Password, employee.Password);
 
             if (verified)
             {
                 return new()
                 {
-                    Name = user.Name,
-                    Email = user.Email,
-                    Role = user.Role.ToString(),
-                    Token = GenerateToken(user)
+                    FirstName =  employee.FirstName,
+                    LastName =  employee.LastName,
+                    Email = employee.Email,
+                    Role = employee.Role.ToString(),
+                    Token = GenerateToken(employee)
                 };
             }
         }
@@ -50,19 +51,20 @@ public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IUserRepository u
     }
 
     /// <summary>
-    /// Generate a token with user claims
+    /// Generate a token with employee claims
     /// </summary>
-    private string GenerateToken(User user)
+    private string GenerateToken(Employee employee)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(jwtConfigOptions.SecretKey);
 
         var claims = new[]
         {
-           new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-           new Claim(ClaimTypes.Name, user.Name),
-           new Claim(ClaimTypes.Email, user.Email),
-           new Claim(ClaimTypes.Role, user.Role.ToString())
+           new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
+           new Claim(ClaimTypes.GivenName, employee.FirstName),
+           new Claim(ClaimTypes.Surname, employee.LastName),
+           new Claim(ClaimTypes.Email, employee.Email),
+           new Claim(ClaimTypes.Role, employee.Role.ToString())
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
