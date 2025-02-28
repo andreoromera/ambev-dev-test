@@ -1,6 +1,6 @@
 // Angular Import
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
@@ -19,6 +19,10 @@ const routes: Routes = [
       {
         path: 'analytics',
         loadComponent: () => import('./demo/dashboard/dash-analytics.component')
+      },
+      {
+        path: 'employees',
+        loadComponent: () => import('./employees/employees.component')
       },
       {
         path: 'component',

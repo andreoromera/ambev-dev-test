@@ -31,6 +31,13 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         url: '/analytics',
         icon: 'feather icon-home'
+      },
+      {
+        id: 'employees',
+        title: 'Employees',
+        type: 'item',
+        url: '/employees',
+        icon: 'feather icon-home'
       }
     ]
   },
