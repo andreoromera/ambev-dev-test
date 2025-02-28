@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -92,7 +93,7 @@ public static class IServiceCollectionExtensions
             options.UseNpgsql(
                 config.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("Ambev.Dev.Test.Data")
-            )
+            ).ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning))
         );
 
         return services;

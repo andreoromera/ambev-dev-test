@@ -1,9 +1,11 @@
 using Ambev.Dev.Test.Api.Handlers;
+using Ambev.Dev.Test.Data;
 using Ambev.Dev.Test.Domain.Validation;
 using Ambev.Dev.Test.IoC.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,11 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CredentialsValidator>();
 
 var app = builder.Build();
+
+//Automatic migration
+using var scope = app.Services.CreateScope();
+using var db = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+db.Database.Migrate();
 
 if (app.Environment.IsDevelopment())
 {
