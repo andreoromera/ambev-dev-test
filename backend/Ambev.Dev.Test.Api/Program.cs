@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.Features;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddConfigs();

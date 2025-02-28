@@ -22,6 +22,7 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
 
         services.AddHttpClient();
         services.AddSingleton(new JsonSerializerOptions(JsonSerializerDefaults.Web));

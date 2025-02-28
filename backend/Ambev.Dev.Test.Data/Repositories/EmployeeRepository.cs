@@ -10,9 +10,58 @@ namespace Ambev.Dev.Test.Data.Repositories;
 public class EmployeeRepository(DefaultContext context) : IEmployeeRepository
 {
     /// <summary>
+    /// Does the employee exist?
+    /// </summary>
+    public async Task<bool> Exists(int id, CancellationToken cancellationToken) => await context
+        .Employees
+        .AnyAsync(x => x.Id == id, cancellationToken);
+
+    /// <summary>
+    /// Get the employee by id
+    /// </summary>
+    public async Task<Employee> GetById(int id, CancellationToken cancellationToken) => await context
+        .Employees
+        .Include(x => x.Superior)
+        .Include(x => x.Phones)
+        .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+    /// <summary>
     /// Get the employee by email
     /// </summary>
     public async Task<Employee> GetByEmail(string email, CancellationToken cancellationToken) => await context
         .Employees
         .FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower(), cancellationToken);
+
+    /// <summary>
+    /// Indicates whether a document is already taken by another employee
+    /// </summary>
+    public async Task<bool> IsDocumentAlreadyTaken(string document, CancellationToken cancellationToken) => await context
+        .Employees
+        .AnyAsync(x => x.Document == document, cancellationToken);
+
+    /// <summary>
+    /// Indicates whether a email is already taken by another employee
+    /// </summary>
+    public async Task<bool> IsEmailAlreadyTaken(string email, CancellationToken cancellationToken) => await context
+        .Employees
+        .AnyAsync(x => x.Email == email, cancellationToken);
+
+    /// <summary>
+    /// Creates a new employee
+    /// </summary>
+    public async Task Create(Employee employee, CancellationToken cancellationToken)
+    {
+        await context.AddAsync(employee, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Deletes the employee
+    /// </summary>
+    public async Task Delete(int id, CancellationToken cancellationToken)
+    {
+        var employee = await context.Employees.FindAsync(id, cancellationToken);
+        context.Employees.Remove(employee);
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }
