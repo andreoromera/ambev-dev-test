@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // project import
+import { authorizationGuard } from "./core/guards/authorization.guard";
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 
@@ -18,11 +19,13 @@ const routes: Routes = [
       },
       {
         path: 'analytics',
-        loadComponent: () => import('./demo/dashboard/dash-analytics.component')
+        loadComponent: () => import('./demo/dashboard/dash-analytics.component'),
+        canActivate: [authorizationGuard]
       },
       {
         path: 'employees',
-        loadComponent: () => import('./employees/employees.component')
+        loadComponent: () => import('./employees/employees.component'),
+        canActivate: [authorizationGuard]
       },
       {
         path: 'component',
@@ -50,6 +53,10 @@ const routes: Routes = [
     path: '',
     component: GuestComponent,
     children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./login/login.component').then((m) => m.LoginComponent)
+      },
       {
         path: 'auth/signup',
         loadComponent: () => import('./demo/pages/authentication/sign-up/sign-up.component')

@@ -1,14 +1,16 @@
 // angular import
-import { Component } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { Component, computed, inject } from '@angular/core';
 
 // bootstrap import
 import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 
 // project import
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
+import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 
 @Component({
   selector: 'app-nav-right',
@@ -28,10 +30,15 @@ import { ChatMsgComponent } from './chat-msg/chat-msg.component';
   ]
 })
 export class NavRightComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   // public props
   visibleUserList: boolean;
   chatMessage: boolean;
   friendId!: number;
+
+  username = computed(() => this.authService.getUserData().fullName);
 
   // constructor
   constructor() {
@@ -44,5 +51,10 @@ export class NavRightComponent {
   onChatToggle(friendID: any) {
     this.friendId = friendID;
     this.chatMessage = !this.chatMessage;
+  }
+
+  logout() {
+    this.authService.logout();
+    location.href = "/";
   }
 }
