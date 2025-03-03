@@ -8,28 +8,28 @@ public class CreateEmployeeModelValidator : AbstractValidator<CreateEmployeeMode
 {
     public CreateEmployeeModelValidator()
     {
-        RuleFor(cred => cred.FirstName)
+        RuleFor(model => model.FirstName)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("The employee's first name cannot be empty")
             .MaximumLength(50)
             .WithMessage("The employee's first name cannot be longer than 50 characters");
 
-        RuleFor(cred => cred.LastName)
+        RuleFor(model => model.LastName)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("The employee's last name cannot be empty")
             .MaximumLength(100)
             .WithMessage("The employee's last name cannot be longer than 100 characters");
 
-        RuleFor(cred => cred.Document)
+        RuleFor(model => model.Document)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("The employee's document number cannot be empty")
             .MaximumLength(20)
             .WithMessage("The employee's document number cannot be longer than 20 characters");
 
-        RuleFor(cred => cred.BirthDate)
+        RuleFor(model => model.BirthDate)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("The employee's birth date cannot be empty")
@@ -38,18 +38,18 @@ public class CreateEmployeeModelValidator : AbstractValidator<CreateEmployeeMode
             .Must(birthDate => DateTime.Parse(birthDate) <= DateTime.Today.AddYears(-18))
             .WithMessage("The employee should be at least 18 years old");
 
-        RuleFor(cred => cred.Role)
+        RuleFor(model => model.Role)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("The employee's role cannot be empty. Possible values are: Admin, President, Director, Manager, Coordinator, Developer")
             .Must(role => Enum.IsDefined(typeof(Role), role))
             .WithMessage("Invalid role. Possible values are: Admin, President, Director, Manager, Coordinator, Developer");
 
-        RuleFor(cred => cred.Phones)
+        RuleFor(model => model.Phones)
             .NotEmpty()
             .WithMessage("The employee must have at least one phone number");
 
-        RuleForEach(cred => cred.Phones)
+        RuleForEach(model => model.Phones)
             .ChildRules(phone =>
             {
                 phone.RuleFor(x => x.Prefix)
@@ -74,7 +74,7 @@ public class CreateEmployeeModelValidator : AbstractValidator<CreateEmployeeMode
                     .WithMessage("Invalid phone type. Possible values are: Home, CellPhone, Work");
             });
 
-        RuleFor(cred => cred.Email).SetValidator(new EmailValidator());
-        RuleFor(cred => cred.Password).SetValidator(new PasswordValidator());
+        RuleFor(model => model.Email).SetValidator(new EmailValidator());
+        RuleFor(model => model.Password).SetValidator(new PasswordValidator());
     }
 }

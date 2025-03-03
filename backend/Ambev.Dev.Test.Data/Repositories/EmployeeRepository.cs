@@ -1,6 +1,7 @@
 ﻿using Ambev.Dev.Test.Domain.Contracts.Repositories;
 using Ambev.Dev.Test.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Ambev.Dev.Test.Data.Repositories;
 
@@ -15,6 +16,16 @@ public class EmployeeRepository(DefaultContext context) : IEmployeeRepository
     public async Task<bool> Exists(int id, CancellationToken cancellationToken) => await context
         .Employees
         .AnyAsync(x => x.Id == id, cancellationToken);
+
+    /// <summary>
+    /// Search for the employee
+    /// </summary>
+    public async Task<List<Employee>> Search(Expression<Func<Employee, bool>> expression, CancellationToken cancellationToken) => await context
+        .Employees
+        .Include(x => x.Superior)
+        .Include(x => x.Phones)
+        .Where(expression)
+        .ToListAsync(cancellationToken);
 
     /// <summary>
     /// Get the employee by id

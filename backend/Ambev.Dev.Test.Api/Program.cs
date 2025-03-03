@@ -1,9 +1,6 @@
 using Ambev.Dev.Test.Api.Handlers;
 using Ambev.Dev.Test.Data;
-using Ambev.Dev.Test.Domain.Validation;
 using Ambev.Dev.Test.IoC.Extensions;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +13,7 @@ builder.Services.AddRepositories();
 builder.Services.AddConfigs();
 builder.Services.AddAuth();
 builder.Services.AddDatabase();
+builder.Services.AddValidation();
 
 //Configuring error handling
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
@@ -39,10 +37,6 @@ builder.Services.AddSwaggerGen();
 //Setting Routing options
 builder.Services.AddRouting(x => x.LowercaseUrls = true);
 
-//COnfiguring Automatic Validation
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CredentialsValidator>();
-
 var app = builder.Build();
 
 //Automatic migration
@@ -64,6 +58,11 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
+
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
 
 app.UseAuthentication();
 app.UseAuthorization();

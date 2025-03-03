@@ -8,6 +8,16 @@ namespace Ambev.Dev.Test.Api.Controllers;
 [Route("[controller]")]
 public class EmployeeController(IEmployeeService employeeService) : ControllerBase
 {
+    [HttpGet("search")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Search([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
+    {
+        var employee = await employeeService.Search(firstName, lastName, cancellationToken);
+        return Ok(employee);
+    }
+
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]

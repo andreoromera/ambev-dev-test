@@ -4,6 +4,11 @@ using Ambev.Dev.Test.Data.Repositories;
 using Ambev.Dev.Test.Domain.Configs;
 using Ambev.Dev.Test.Domain.Contracts.Repositories;
 using Ambev.Dev.Test.Domain.Contracts.Services;
+using Ambev.Dev.Test.Domain.Models;
+using Ambev.Dev.Test.Domain.Security;
+using Ambev.Dev.Test.Domain.Validation;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -96,6 +101,14 @@ public static class IServiceCollectionExtensions
             ).ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning))
         );
 
+        return services;
+    }
+
+    public static IServiceCollection AddValidation(this IServiceCollection services)
+    {
+        services.AddScoped<IValidator<SignInCredentials>, SignInCredentialsValidator>();
+        services.AddScoped<IValidator<CreateEmployeeModel>, CreateEmployeeModelValidator>();
+        services.AddFluentValidationAutoValidation();
         return services;
     }
 }

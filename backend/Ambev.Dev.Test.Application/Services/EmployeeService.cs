@@ -4,6 +4,7 @@ using Ambev.Dev.Test.Domain.Exceptions;
 using Ambev.Dev.Test.Domain.Models;
 using System.Security.Claims;
 using Ambev.Dev.Test.Domain.Entities;
+using LinqKit;
 
 namespace Ambev.Dev.Test.Application.Services;
 
@@ -13,6 +14,26 @@ namespace Ambev.Dev.Test.Application.Services;
 public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository employeeRepository) : IEmployeeService
 {
     private readonly int loggedUserId = int.Parse(principal.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+    /// <summary>
+    /// Gets the list of registered employees
+    /// </summary>
+    public async Task<List<EmployeeModel>> Search(string firstName, string lastName, CancellationToken cancellationToken)
+    {
+        var expression = PredicateBuilder.New<Employee>(true);
+
+        if (!string.IsNullOrEmpty(firstName))
+            expression.And(x => x.FirstName.ToLower().Contains(firstName.ToLower()));
+
+        if (!string.IsNullOrEmpty(lastName))
+            expression.And(x => x.LastName.ToLower().Contains(lastName.ToLower()));
+
+        var employees = await employeeRepository.Search(expression, cancellationToken);
+
+        return employees
+            .Select(x => new EmployeeModel(x))
+            .ToList();
+    }
 
     /// <summary>
     /// Gets the employee by id

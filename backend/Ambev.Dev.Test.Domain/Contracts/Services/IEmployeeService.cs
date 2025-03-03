@@ -11,6 +11,11 @@ public interface IEmployeeService
     Task<EmployeeModel> GetById(int id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the list of registered employees
+    /// </summary>
+    Task<List<EmployeeModel>> Search(string firstName, string lastName, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Creates the new employee using the provided employee data
     /// </summary>
     /// <exception cref="CustomException"></exception>

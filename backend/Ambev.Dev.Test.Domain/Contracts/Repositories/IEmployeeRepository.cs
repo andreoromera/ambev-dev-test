@@ -1,4 +1,5 @@
 ﻿using Ambev.Dev.Test.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace Ambev.Dev.Test.Domain.Contracts.Repositories;
 
@@ -8,6 +9,11 @@ public interface IEmployeeRepository
     /// Does the employee exist?
     /// </summary>
     public Task<bool> Exists(int id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Search for the employee
+    /// </summary>
+    Task<List<Employee>> Search(Expression<Func<Employee, bool>> expression, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets de employee by its id
