@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +7,6 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private isAuthenticated = false;
   private authSecretKey = 'auth';
-  private baseAddress = 'https://localhost:7199';
 
   constructor() {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
@@ -14,7 +14,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     try {
-      const response = await fetch(`${this.baseAddress}/auth/signin`, {
+      const response = await fetch(`${environment.apiUrl}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

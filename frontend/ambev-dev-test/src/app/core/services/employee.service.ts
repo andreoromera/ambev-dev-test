@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
 
 @Injectable({
@@ -6,7 +7,6 @@ import { AuthService } from "./auth.service";
 })
 export class EmployeeService {
   private authService = inject(AuthService);
-  private baseAddress = 'https://localhost:7199';
 
   async filter(firstName?: string, lastName?: string) {
     try {
@@ -19,7 +19,7 @@ export class EmployeeService {
       if (firstName) params.append('firstname', firstName);
       if (lastName) params.append('lastname', lastName);
 
-      const response = await fetch(`${this.baseAddress}/employee/search?${params}`, { headers: headers });
+      const response = await fetch(`${environment.apiUrl}/employee/search?${params}`, { headers: headers });
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
