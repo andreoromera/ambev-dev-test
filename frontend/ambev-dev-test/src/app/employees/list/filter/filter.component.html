@@ -13,8 +13,14 @@
       </div>
     </div>
     <div class="col-sm-4 align-content-end form-group text-end">
-      <button type="button" class="btn btn-success" (click)="onSearchClicked()" #searchButton>Filter</button>
-      <a class="btn btn-primary ms-1" routerLink="create">Create</a>
+      <button type="button" class="btn btn-success" (click)="onSearchClicked()" #searchButton>
+        <i class="feather icon-filter"></i>
+        Filter
+      </button>
+      <a class="btn btn-primary ms-1" routerLink="create">
+        <i class="feather icon-user-plus"></i>
+        Create
+      </a>
     </div>
   </div>
 </app-card>

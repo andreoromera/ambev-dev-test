@@ -1,0 +1,41 @@
+<app-card cardTitle="Results" [options]="false">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>E-mail</th>
+              <th>Document</th>
+              <th>Role</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (employees()?.length === 0) {
+              <tr>
+                <td colspan="6" class="text-center">No records found</td>
+              </tr>
+            }
+            @for (employee of employees(); track employee.id) {
+              <tr>
+                <th scope="row">{{ employee.id }}</th>
+                <td>{{ employee.firstName }}</td>
+                <td>{{ employee.lastName }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.document }}</td>
+                <td>{{ employee.role }}</td>
+                <td class="text-end">
+                  <button type="button" class="btn btn-icon btn-danger d-inline-flex" title="Delete Employee" [disabled]="employee.id === 1"><i class="feather icon-x-circle"></i></button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>

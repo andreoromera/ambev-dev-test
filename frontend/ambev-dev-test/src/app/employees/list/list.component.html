@@ -1,37 +1,8 @@
-<app-card cardTitle="Results" [options]="false">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>E-mail</th>
-              <th>Document</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if (employees()?.length === 0) {
-              <tr>
-                <td colspan="6" class="text-center">No records found</td>
-              </tr>
-            }
-            @for (employee of employees(); track employee.id) {
-              <tr>
-                <th scope="row">{{ employee.id }}</th>
-                <td>{{ employee.firstName }}</td>
-                <td>{{ employee.lastName }}</td>
-                <td>{{ employee.email }}</td>
-                <td>{{ employee.document }}</td>
-                <td>{{ employee.role }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-sm-12">
+  <app-filter (search)="search($event)"></app-filter>
   </div>
-</app-card>
+  <div class="col-sm-12">
+    <app-grid [employees]="employees"></app-grid>
+  </div>
+</div>
