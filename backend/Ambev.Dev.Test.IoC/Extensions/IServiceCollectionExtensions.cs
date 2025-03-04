@@ -93,7 +93,7 @@ public static class IServiceCollectionExtensions
     {
         var serviceProvider = services.BuildServiceProvider();
         var config = serviceProvider.GetService<IConfiguration>();
-
+        
         services.AddDbContext<DefaultContext>(options =>
             options.UseNpgsql(
                 config.GetConnectionString("DefaultConnection"),

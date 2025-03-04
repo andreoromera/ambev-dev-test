@@ -3,6 +3,7 @@ using Ambev.Dev.Test.Data;
 using Ambev.Dev.Test.IoC.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddRouting(x => x.LowercaseUrls = true);
 
 var app = builder.Build();
+
+//Migrate Database
+using var scope = app.Services.CreateScope();
+using var db = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+db.Database.Migrate();
 
 if (app.Environment.IsDevelopment())
 {
