@@ -39,11 +39,6 @@ builder.Services.AddRouting(x => x.LowercaseUrls = true);
 
 var app = builder.Build();
 
-//Automatic migration
-using var scope = app.Services.CreateScope();
-using var db = scope.ServiceProvider.GetRequiredService<DefaultContext>();
-db.Database.Migrate();
-
 if (app.Environment.IsDevelopment())
 {
     //Swagger only for development purposes

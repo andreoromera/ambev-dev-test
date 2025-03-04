@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ambev.Dev.Test.Data.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    [Migration("20250227213852_CreateEmployee")]
+    [Migration("20250304142112_CreateEmployee")]
     partial class CreateEmployee
     {
         /// <inheritdoc />
@@ -71,6 +71,8 @@ namespace Ambev.Dev.Test.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SuperiorId");
 
                     b.ToTable("Employee", (string)null);
 
@@ -136,6 +138,15 @@ namespace Ambev.Dev.Test.Data.Migrations
                             PhoneType = 2,
                             Prefix = "+5511"
                         });
+                });
+
+            modelBuilder.Entity("Ambev.Dev.Test.Domain.Entities.Employee", b =>
+                {
+                    b.HasOne("Ambev.Dev.Test.Domain.Entities.Employee", "Superior")
+                        .WithMany()
+                        .HasForeignKey("SuperiorId");
+
+                    b.Navigation("Superior");
                 });
 
             modelBuilder.Entity("Ambev.Dev.Test.Domain.Entities.EmployeePhone", b =>

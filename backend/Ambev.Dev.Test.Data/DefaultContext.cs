@@ -11,6 +11,7 @@ public class DefaultContext : DbContext
 
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {
+        this.Database.Migrate();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

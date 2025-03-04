@@ -33,6 +33,11 @@ namespace Ambev.Dev.Test.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employee", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employee_Employee_SuperiorId",
+                        column: x => x.SuperiorId,
+                        principalTable: "Employee",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -70,6 +75,11 @@ namespace Ambev.Dev.Test.Data.Migrations
                     { 1, 1, "55648899", 1, "+5511" },
                     { 2, 1, "984151887", 2, "+5511" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employee_SuperiorId",
+                table: "Employee",
+                column: "SuperiorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeePhones_EmployeeId",

@@ -69,6 +69,8 @@ namespace Ambev.Dev.Test.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SuperiorId");
+
                     b.ToTable("Employee", (string)null);
 
                     b.HasData(
@@ -133,6 +135,15 @@ namespace Ambev.Dev.Test.Data.Migrations
                             PhoneType = 2,
                             Prefix = "+5511"
                         });
+                });
+
+            modelBuilder.Entity("Ambev.Dev.Test.Domain.Entities.Employee", b =>
+                {
+                    b.HasOne("Ambev.Dev.Test.Domain.Entities.Employee", "Superior")
+                        .WithMany()
+                        .HasForeignKey("SuperiorId");
+
+                    b.Navigation("Superior");
                 });
 
             modelBuilder.Entity("Ambev.Dev.Test.Domain.Entities.EmployeePhone", b =>

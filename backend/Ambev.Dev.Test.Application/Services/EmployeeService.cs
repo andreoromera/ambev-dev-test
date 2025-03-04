@@ -89,6 +89,9 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         if (id <= 0)
             throw new CustomException("Invalid id");
 
+        if (id == 1)
+            throw new CustomException("Superuser cannot be deleted");
+
         //Employee exists?
         var exists = await employeeRepository.Exists(id, cancellationToken);
 
