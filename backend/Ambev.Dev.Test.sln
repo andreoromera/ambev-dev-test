@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.Common", "Am
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ambev.Dev.Test.IoC", "Ambev.Dev.Test.IoC\Ambev.Dev.Test.IoC.csproj", "{EE3B04E9-D71C-4BF2-AD40-F515277968AD}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7D23D4C4-CB22-4288-B4C3-485806DA9B57}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{EE3B04E9-D71C-4BF2-AD40-F515277968AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE3B04E9-D71C-4BF2-AD40-F515277968AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE3B04E9-D71C-4BF2-AD40-F515277968AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D23D4C4-CB22-4288-B4C3-485806DA9B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D23D4C4-CB22-4288-B4C3-485806DA9B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D23D4C4-CB22-4288-B4C3-485806DA9B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D23D4C4-CB22-4288-B4C3-485806DA9B57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
