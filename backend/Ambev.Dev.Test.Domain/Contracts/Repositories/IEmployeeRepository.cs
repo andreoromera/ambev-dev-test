@@ -44,4 +44,5 @@ public interface IEmployeeRepository
     /// Deletes the employee
     /// </summary>
     public Task Delete(int id, CancellationToken cancellationToken);
+    Task<List<Employee>> GetAll(CancellationToken cancellationToken);
 }

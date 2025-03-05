@@ -17,21 +17,23 @@
           <tbody>
             @if (employees()?.length === 0) {
               <tr>
-                <td colspan="6" class="text-center">No records found</td>
+                <td colspan="100" class="text-center">No records found</td>
               </tr>
-            }
-            @for (employee of employees(); track employee.id) {
-              <tr>
-                <th scope="row">{{ employee.id }}</th>
-                <td>{{ employee.firstName }}</td>
-                <td>{{ employee.lastName }}</td>
-                <td>{{ employee.email }}</td>
-                <td>{{ employee.document }}</td>
-                <td>{{ employee.role }}</td>
-                <td class="text-end">
-                  <button type="button" class="btn btn-icon btn-danger d-inline-flex" title="Delete Employee" [disabled]="employee.id === 1"><i class="feather icon-x-circle"></i></button>
-                </td>
-              </tr>
+            } @else {
+              @for (employee of employees(); track employee.id) {
+                <tr>
+                  <th scope="row">{{ employee.id }}</th>
+                  <td>{{ employee.firstName }}</td>
+                  <td>{{ employee.lastName }}</td>
+                  <td>{{ employee.email }}</td>
+                  <td>{{ employee.document }}</td>
+                  <td>{{ employee.role }}</td>
+                  <td class="text-end">
+                    <button type="button" class="btn btn-icon btn-danger d-inline-flex" title="Delete Employee" [disabled]="employee.id === 1"><i class="feather icon-x-circle"></i></button>
+                    <a class="btn btn-icon btn-info d-inline-flex ms-1" title="Update Employee" [routerLink]="[employee.id, 'update']"><i class="feather icon-edit"></i></a>
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>

@@ -38,6 +38,7 @@ public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IEmployeeReposito
             {
                 return new()
                 {
+                    Id =  employee.Id,
                     FirstName =  employee.FirstName,
                     LastName =  employee.LastName,
                     Email = employee.Email,

@@ -18,6 +18,15 @@ public class EmployeeRepository(DefaultContext context) : IEmployeeRepository
         .AnyAsync(x => x.Id == id, cancellationToken);
 
     /// <summary>
+    /// Get a list of all employees
+    /// </summary>
+    public async Task<List<Employee>> GetAll(CancellationToken cancellationToken) => await context
+        .Employees
+        .OrderBy(x => x.FirstName)
+            .ThenBy(x => x.LastName)
+        .ToListAsync(cancellationToken);
+
+    /// <summary>
     /// Search for the employee
     /// </summary>
     public async Task<List<Employee>> Search(Expression<Func<Employee, bool>> expression, CancellationToken cancellationToken) => await context

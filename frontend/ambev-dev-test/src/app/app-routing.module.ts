@@ -29,7 +29,12 @@ const routes: Routes = [
       },
       {
         path: 'employees/create',
-        loadComponent: () => import('./employees/manage/manage.component'),
+        loadComponent: () => import('./employees/create/create.component'),
+        canActivate: [authorizationGuard],
+      },
+      {
+        path: 'employees/:id/update',
+        loadComponent: () => import('./employees/update/update.component'),
         canActivate: [authorizationGuard],
       },
       {

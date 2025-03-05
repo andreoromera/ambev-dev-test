@@ -30,4 +30,23 @@ export class EmployeeService {
       console.error(err.message);
     }
   }
+
+  async getAll() {
+    try {
+      const user = this.authService.getUserData()!;
+
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${user.token}`);
+
+      const response = await fetch(`${environment.apiUrl}/employee/all`, { headers: headers });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
 }

@@ -1,0 +1,188 @@
+<form #formData="ngForm" name="formData">
+  <app-card cardTitle="Employee Data" [options]="false">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="employeeFirstName">First Name</label>
+          <input #employeeFirstName="ngModel" [(ngModel)]="employee.firstName" type="text" name="employeeFirstName" id="employeeFirstName" class="form-control" required [class.is-invalid]="formData.submitted && employeeFirstName.invalid" />
+          <div *ngIf="employeeFirstName.errors?.required" class="invalid-feedback">Please provide the employee first name.</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="employeeLastName">Last Name</label>
+          <input #employeeLastName="ngModel" [(ngModel)]="employee.lastName" type="text" name="employeeLastName" id="employeeLastName" class="form-control" required [class.is-invalid]="formData.submitted && employeeLastName.invalid" />
+          <div *ngIf="employeeLastName.errors?.required" class="invalid-feedback">Please provide the employee last name.</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="employeeEmail">E-mail</label>
+          <input #employeeEmail="ngModel" [(ngModel)]="employee.email" type="text" name="employeeEmail" id="employeeEmail" class="form-control" required email [class.is-invalid]="formData.submitted && employeeEmail.invalid" />
+          <div *ngIf="employeeEmail.errors?.required" class="invalid-feedback">Please provide the employee e-mail address.</div>
+          <div *ngIf="employeeEmail.errors?.email" class="invalid-feedback">Please provide a valid e-mail address.</div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="employeeDocument">Document</label>
+          <input #employeeDocument="ngModel" [(ngModel)]="employee.document" mask="000.000.000-00" type="text" name="employeeDocument" id="employeeDocument" class="form-control" required [class.is-invalid]="formData.submitted && employeeDocument.invalid" />
+          <div *ngIf="employeeDocument.errors?.required" class="invalid-feedback">Please provide the employee document (CPF).</div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="employeeBirthdate">Birth Date</label>
+          <input #employeeBirthdate="ngModel" [(ngModel)]="employee.birthDate" type="date" name="employeeBirthdate" id="employeeBirthdate" class="form-control" required [class.is-invalid]="formData.submitted && employeeBirthdate.invalid" />
+          <div *ngIf="employeeBirthdate.errors?.required" class="invalid-feedback">Please provide the employee birth date.</div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="employeeSuperior">Superior</label>
+          <select [(ngModel)]="employee.superior" class="form-control" name="employeeSuperior" id="employeeSuperior">
+            <option value="">Choose...</option>
+            @for (sup of superiors; track sup.id) {
+              <option [value]="sup.id">{{sup.fullName}}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+    @if (isEditing) {
+      <div class="row">
+        <div class="col-sm-12 d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary ms-1">
+            <i class="feather icon-save"></i>
+            Update Employee
+          </button>
+        </div>
+      </div>
+    }
+  </app-card>
+  <app-card cardTitle="Telephones" [options]="false">
+    <div class="row">
+      <div class="col-sm-1">
+        <div class="form-group">
+          <label for="phonePrefix">Prefix</label>
+          <input type="text" name="phonePrefix" id="phonePrefix" class="form-control" [(ngModel)]="phonePrefix" maxlength="2" mask="00" />
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input type="text" name="phoneNumber" id="phoneNumber" class="form-control" [(ngModel)]="phoneNumber" maxlength="10" mask="900000000" />
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="form-group">
+          <label for="phoneType">Type</label>
+          <select name="phoneType" id="phoneType" class="form-control" [(ngModel)]="phoneType">
+            <option value="" selected>Choose...</option>
+            <option value="1">Home</option>
+            <option value="2">Cellular</option>
+            <option value="3">Work</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="form-group d-flex flex-column">
+          <label>&nbsp;</label>
+          <button type="button" class="btn btn-primary w-50" (click)="addPhone()">Add Phone</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Prefix</th>
+                <th>Number</th>
+                <th>Type</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (phones?.length === 0) {
+                <tr>
+                  <td colspan="100" class="text-center">No records found</td>
+                </tr>
+              } @else {
+                @for (phone of phones; track phone.id) {
+                  <tr>
+                    <th scope="row">{{ phone.id || "-" }}</th>
+                    <td>{{ phone.prefix }}</td>
+                    <td>{{ phone.number }}</td>
+                    <td>{{ getPhoneType(phone.type) }}</td>
+                    <td class="text-end">
+                      <button type="button" class="btn btn-icon btn-danger d-inline-flex" title="Delete Phone"><i class="feather icon-x-circle"></i></button>
+                    </td>
+                  </tr>
+                }
+              }
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </app-card>
+</form>
+
+<form #formAuth="ngForm" name="formAuth">
+  <app-card cardTitle="Authorization Data" [options]="false">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="employeePassword">Password</label>
+          <input type="password" name="employeePassword" id="employeePassword" class="form-control" [(ngModel)]="employee.password" autocomplete="new-password" />
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="employeeConfirmPassword">Confirm Password</label>
+          <input type="password" name="employeeConfirmPassword" id="employeeConfirmPassword" class="form-control" [(ngModel)]="employee.passwordConfirm" autocomplete="new-password" />
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label for="employeeRole">Role</label>
+          <select name="employeeRole" id="employeeRole" class="form-control" [(ngModel)]="employee.role">
+            <option value="">Choose...</option>
+            <option value="600">Admin</option>
+            <option value="500">President</option>
+            <option value="400">Director</option>
+            <option value="300">Manager</option>
+            <option value="200">Coordinator</option>
+            <option value="100">Developer</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    @if (isEditing) {
+      <div class="row">
+        <div class="col-sm-12 d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary ms-1">
+            <i class="feather icon-save"></i>
+            Change Credentials
+          </button>
+        </div>
+      </div>
+    }
+  </app-card>
+</form>
+
+<div class="d-flex justify-content-end mb-4">
+  <a class="btn btn-icon btn-danger" routerLink="/employees">
+    <i class="feather icon-slash"></i>
+    Cancel
+  </a>
+  @if (!isEditing) {
+    <button type="submit" class="btn btn-primary ms-1" (click)="create()">
+      <i class="feather icon-save"></i>
+      Create New Employee
+    </button>
+  }
+</div>

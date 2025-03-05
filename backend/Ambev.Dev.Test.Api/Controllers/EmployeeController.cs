@@ -9,7 +9,7 @@ namespace Ambev.Dev.Test.Api.Controllers;
 public class EmployeeController(IEmployeeService employeeService) : ControllerBase
 {
     [HttpGet("search")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<EmployeeModel>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Search([FromQuery] string firstName, [FromQuery] string lastName, CancellationToken cancellationToken)
@@ -18,11 +18,21 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
         return Ok(employee);
     }
 
+    [HttpGet("all")]
+    [ProducesResponseType<List<EmployeeSimpleModel>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    {
+        var employee = await employeeService.GetAll(cancellationToken);
+        return Ok(employee);
+    }
+
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOne(int id, CancellationToken cancellationToken)
     {
         var employee = await employeeService.GetById(id, cancellationToken);
         return Ok(employee);

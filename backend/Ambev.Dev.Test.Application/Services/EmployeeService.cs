@@ -5,6 +5,7 @@ using Ambev.Dev.Test.Domain.Models;
 using System.Security.Claims;
 using Ambev.Dev.Test.Domain.Entities;
 using LinqKit;
+using System.Linq.Expressions;
 
 namespace Ambev.Dev.Test.Application.Services;
 
@@ -16,7 +17,19 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
     private readonly int loggedUserId = int.Parse(principal.FindFirst(ClaimTypes.NameIdentifier).Value);
 
     /// <summary>
-    /// Gets the list of registered employees
+    /// Gets the list of all registered employees
+    /// </summary>
+    public async Task<List<EmployeeSimpleModel>> GetAll(CancellationToken cancellationToken)
+    {
+        var employees = await employeeRepository.GetAll(cancellationToken);
+
+        return employees
+            .Select(x => new EmployeeSimpleModel(x))
+            .ToList();
+    }
+
+    /// <summary>
+    /// Gets a list of filtered employees
     /// </summary>
     public async Task<List<EmployeeModel>> Search(string firstName, string lastName, CancellationToken cancellationToken)
     {

@@ -11,7 +11,12 @@ public interface IEmployeeService
     Task<EmployeeModel> GetById(int id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the list of registered employees
+    /// Gets the list of all registered employees
+    /// </summary>
+    Task<List<EmployeeSimpleModel>> GetAll(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets a list of filtered employees
     /// </summary>
     Task<List<EmployeeModel>> Search(string firstName, string lastName, CancellationToken cancellationToken);
 
