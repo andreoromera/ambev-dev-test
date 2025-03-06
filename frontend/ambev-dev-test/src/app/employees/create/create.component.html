@@ -1,4 +1,4 @@
-<form #formData="ngForm" name="formData" [mustMatch]="['employeePassword', 'employeeConfirmPassword']">
+<form #formData="ngForm" name="formData" [mustMatch]="['employeePassword', 'employeeConfirmPassword']" (submit)="create()">
   <app-card cardTitle="Employee Data" [options]="false">
     <div class="row">
       <div class="col-sm-4">
@@ -69,9 +69,9 @@
           <label for="phoneType">Type</label>
           <select name="phoneType" id="phoneType" class="form-control" [(ngModel)]="phoneType">
             <option value="" selected>Choose...</option>
-            <option value="1">Home</option>
-            <option value="2">Cellular</option>
-            <option value="3">Work</option>
+            <option value="Home">Home</option>
+            <option value="CellPhone">Cellular</option>
+            <option value="Work">Work</option>
           </select>
         </div>
       </div>
@@ -84,7 +84,7 @@
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <div class="table-responsive" [class.is-invalid]="formData.submitted && phones?.length === 0">
+        <div class="table-responsive" [class.is-invalid]="formData.submitted && employee.phones.length === 0">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -96,17 +96,17 @@
               </tr>
             </thead>
             <tbody>
-              @if (phones?.length === 0) {
+              @if (employee.phones.length === 0) {
                 <tr>
                   <td colspan="100" class="text-center">No records found</td>
                 </tr>
               } @else {
-                @for (phone of phones; track phone.id) {
+                @for (phone of employee.phones; track phone.id) {
                   <tr>
                     <th scope="row">{{ phone.id || "-" }}</th>
-                    <td>{{ phone.prefix }}</td>
-                    <td>{{ phone.number }}</td>
-                    <td>{{ getPhoneType(phone.type) }}</td>
+                    <td>{{ phone.phonePrefix }}</td>
+                    <td>{{ phone.phoneNumber }}</td>
+                    <td>{{ phone.phoneType }}</td>
                     <td class="text-end">
                       <button type="button" class="btn btn-icon btn-danger d-inline-flex" title="Delete Phone"><i class="feather icon-x-circle"></i></button>
                     </td>
@@ -116,7 +116,7 @@
               </tbody>
           </table>
         </div>
-        <div *ngIf="phones?.length === 0" class="invalid-feedback">Please provide at least one telephone number.</div>
+        <div *ngIf="employee.phones.length === 0" class="invalid-feedback">Please provide at least one telephone number.</div>
       </div>
     </div>
   </app-card>
@@ -126,9 +126,9 @@
         <div class="form-group">
           <label for="employeePassword">Password</label>
           <input #employeePassword="ngModel" [(ngModel)]="employee.password" type="password" name="employeePassword" id="employeePassword" class="form-control" autocomplete="new-password" required [class.is-invalid]="formData.submitted && employeePassword.invalid" [pattern]="passwordStrengthPattern" />
-          <password-strength-meter [password]="employee.password" [enableFeedback]="true" (strengthChange)="onPasswordStrengthChange($event)"></password-strength-meter>
-          <div *ngIf="employeeConfirmPassword.errors?.required" class="invalid-feedback">A Password should be at least 8 chars, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special char</div>
-          <div *ngIf="employeeConfirmPassword.errors?.pattern" class="invalid-feedback">B Password should be at least 8 chars, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special char</div>
+          <password-strength-meter [password]="employee.password" [enableFeedback]="true"></password-strength-meter>
+          <div *ngIf="employeePassword.errors?.required" class="invalid-feedback">Password should not be empty</div>
+          <div *ngIf="employeePassword.errors?.pattern" class="invalid-feedback">Password should be at least 8 chars, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special char</div>
         </div>
       </div>
       <div class="col-sm-5">
@@ -142,17 +142,14 @@
       <div class="col-sm-2">
         <div class="form-group">
           <label for="employeeRole">Role</label>
-          <select #employeeRole="ngModel" [(ngModel)]="employee.role.value" name="employeeRole" id="employeeRole" class="form-control" required [class.is-invalid]="formData.submitted && employee.role.invalid()">
-            <option value="">Choose...</option>
-            <option value="600">Admin</option>
-            <option value="500">President</option>
-            <option value="400">Director</option>
-            <option value="300">Manager</option>
-            <option value="200">Coordinator</option>
-            <option value="100">Developer</option>
+          <select #employeeRole="ngModel" [(ngModel)]="employee.role" name="employeeRole" id="employeeRole" class="form-control" required [class.is-invalid]="formData.submitted && !employee.roleIsValid(loggedUserRoleId)">
+            <option [ngValue]="undefined" selected>Choose...</option>
+            @for (role of roles; track role.id) {
+              <option [ngValue]="role">{{role.name}}</option>
+            }
           </select>
           <div *ngIf="employeeRole.errors?.required" class="invalid-feedback">Please provide the employee's role.</div>
-          <div *ngIf="employeeRole.valid && employee.role.invalid()" class="invalid-feedback">Please provide a role lower than yours.</div>
+          <div *ngIf="employee.role && !employee.roleIsValid(loggedUserRoleId)" class="invalid-feedback">Please provide a role lower than yours.</div>
         </div>
       </div>
     </div>
@@ -163,7 +160,7 @@
       <i class="feather icon-slash"></i>
       Cancel
     </a>
-    <button type="submit" class="btn btn-primary ms-1" (click)="create()">
+    <button type="submit" class="btn btn-primary ms-1">
       <i class="feather icon-save"></i>
       Create New Employee
     </button>

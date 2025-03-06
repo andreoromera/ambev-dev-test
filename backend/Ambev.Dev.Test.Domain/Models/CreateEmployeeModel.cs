@@ -23,7 +23,7 @@ public class CreateEmployeeModel
 
 public class CreateEmployeePhoneModel
 {
-    public string Prefix { get; set; }
+    public string PhonePrefix { get; set; }
     public string PhoneNumber { get; set; }
     public string PhoneType { get; set; }
 

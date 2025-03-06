@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { SharedModule } from "src/app/theme/shared/shared.module";
 
@@ -10,4 +10,9 @@ import { SharedModule } from "src/app/theme/shared/shared.module";
 })
 export class GridComponent {
   employees = input<any[]>();
+  deleteEvent = output<number>({ alias: "delete" });
+
+  delete (id: number) {
+    this.deleteEvent.emit(id);
+  }
 }

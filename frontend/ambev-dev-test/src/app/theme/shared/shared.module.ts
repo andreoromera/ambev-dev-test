@@ -1,6 +1,6 @@
 // Angular Import
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // project import
@@ -8,12 +8,13 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { CardComponent } from './components/card/card.component';
 
 // third party
-import { NgScrollbarModule } from 'ngx-scrollbar';
 import 'hammerjs';
 import 'mousetrap';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 // bootstrap import
-import { NgbDropdownModule, NgbNavModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { NgbDropdownModule, NgbNavModule, NgbModule } from '@ng-bootstrap/ng-boo
     NgbDropdownModule,
     NgbNavModule,
     NgbModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    SweetAlert2Module.forRoot()
   ],
   exports: [
     CommonModule,
@@ -36,7 +38,8 @@ import { NgbDropdownModule, NgbNavModule, NgbModule } from '@ng-bootstrap/ng-boo
     NgbModule,
     NgbDropdownModule,
     NgbNavModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    SweetAlert2Module
   ],
   declarations: []
 })

@@ -36,7 +36,7 @@ public class Employee
         this.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
         this.Phones = model.Phones.Select(phone => new EmployeePhone
         {
-            Prefix = phone.Prefix,
+            Prefix = phone.PhonePrefix,
             PhoneNumber = phone.PhoneNumber.Replace("-", ""),
             PhoneType = phone.ActualPhoneType,
         }).ToList();

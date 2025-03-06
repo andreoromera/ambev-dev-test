@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { environment } from "src/environments/environment";
-import { AuthService } from "./auth.service";
+import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +10,11 @@ export class EmployeeService {
 
   async filter(firstName?: string, lastName?: string) {
     try {
-      const user = this.authService.getUserData()!;
-
-      const headers = new Headers();
-      headers.append('Authorization', `Bearer ${user.token}`);
-
       const params = new URLSearchParams();
       if (firstName) params.append('firstname', firstName);
       if (lastName) params.append('lastname', lastName);
 
-      const response = await fetch(`${environment.apiUrl}/employee/search?${params}`, { headers: headers });
+      const response = await fetch(`${environment.apiUrl}/employee/search?${params}`, { headers: this.getHeaders() });
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -33,12 +28,7 @@ export class EmployeeService {
 
   async getAll() {
     try {
-      const user = this.authService.getUserData()!;
-
-      const headers = new Headers();
-      headers.append('Authorization', `Bearer ${user.token}`);
-
-      const response = await fetch(`${environment.apiUrl}/employee/all`, { headers: headers });
+      const response = await fetch(`${environment.apiUrl}/employee/all`, { headers: this.getHeaders() });
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -48,5 +38,29 @@ export class EmployeeService {
     } catch (err) {
       console.error(err.message);
     }
+  }
+
+  async create(employee: any) {
+    return await fetch(`${environment.apiUrl}/employee`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(employee)
+    });
+  }
+
+  async delete(id: number) {
+    return await fetch(`${environment.apiUrl}/employee/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders()
+    });
+  }
+
+  private getHeaders() {
+    const user = this.authService.getUserData()!;
+
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${user.token}`);
+    headers.append('Content-Type', `application/json`);
+    return headers;
   }
 }

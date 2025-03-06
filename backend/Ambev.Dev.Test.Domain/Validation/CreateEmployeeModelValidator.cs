@@ -52,7 +52,7 @@ public class CreateEmployeeModelValidator : AbstractValidator<CreateEmployeeMode
         RuleForEach(model => model.Phones)
             .ChildRules(phone =>
             {
-                phone.RuleFor(x => x.Prefix)
+                phone.RuleFor(x => x.PhonePrefix)
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .WithMessage("The phone prefix cannot be empty")
