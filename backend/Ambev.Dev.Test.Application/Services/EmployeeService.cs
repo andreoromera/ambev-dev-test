@@ -130,7 +130,7 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
 
         //Maps and updates the employee
         var config = new TypeAdapterConfig();
-        config.NewConfig<EmployeeManageModel, Employee>().IgnoreNullValues(true);
+        config.NewConfig<EmployeeManageModel, Employee>().Ignore(x => x.Password);
         model.Adapt(employee, config);
         await employeeRepository.Update(employee, cancellationToken);
     }
