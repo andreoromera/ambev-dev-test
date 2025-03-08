@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Ambev.Dev.Test.Domain.Validation;
 
-public class CreateEmployeeModelValidator : AbstractValidator<CreateEmployeeModel>
+public class CreateEmployeeModelValidator : AbstractValidator<EmployeeManageModel>
 {
     public CreateEmployeeModelValidator()
     {

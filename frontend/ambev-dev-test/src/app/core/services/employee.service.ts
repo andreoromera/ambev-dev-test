@@ -8,6 +8,20 @@ import { AuthService } from './auth.service';
 export class EmployeeService {
   private authService = inject(AuthService);
 
+  async getById (employeeId: number) {
+    try {
+      const response = await fetch(`${environment.apiUrl}/employee/${employeeId}`, { headers: this.getHeaders() });
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+
   async filter(firstName?: string, lastName?: string) {
     try {
       const params = new URLSearchParams();
@@ -43,6 +57,14 @@ export class EmployeeService {
   async create(employee: any) {
     return await fetch(`${environment.apiUrl}/employee`, {
       method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(employee)
+    });
+  }
+
+  async update(employee: any) {
+    return await fetch(`${environment.apiUrl}/employee`, {
+      method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify(employee)
     });

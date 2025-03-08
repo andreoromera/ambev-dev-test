@@ -25,17 +25,17 @@ const routes: Routes = [
       {
         path: 'employees',
         loadComponent: () => import('./employees/list/list.component'),
-        canActivate: [authorizationGuard],
+        canActivate: [authorizationGuard]
       },
       {
         path: 'employees/create',
-        loadComponent: () => import('./employees/create/create.component'),
-        canActivate: [authorizationGuard],
+        loadComponent: () => import('./employees/manage/manage.component'),
+        canActivate: [authorizationGuard]
       },
       {
         path: 'employees/:id/update',
-        loadComponent: () => import('./employees/update/update.component'),
-        canActivate: [authorizationGuard],
+        loadComponent: () => import('./employees/manage/manage.component'),
+        canActivate: [authorizationGuard]
       },
       {
         path: 'component',

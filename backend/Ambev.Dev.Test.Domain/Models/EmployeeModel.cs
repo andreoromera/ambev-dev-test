@@ -11,7 +11,7 @@ public class EmployeeModel
     public string Email { get; set; }
     public string Document { get; set; }
     public string Superior { get; set; }
-    public string Role { get; set; }
+    public object Role { get; set; }
     public string BirthDate { get; set; }
     public IEnumerable<EmployeePhoneModel> Phones { get; set; } = [];
 
@@ -30,14 +30,19 @@ public class EmployeeModel
         this.Superior = employee.Superior is not null 
             ? $"{employee.Superior.FirstName} {employee.Superior.LastName} ({employee.Superior.Role})"
             : default;
-        this.Role = employee.Role.ToString();
+        this.Role = new 
+        { 
+            Id = (int)employee.Role,
+            Name = employee.Role.ToString()
+        };
         this.Phones = employee.Phones.Select(p => new EmployeePhoneModel(p));
     }
 }
 
 public class EmployeePhoneModel
 {
-    public string Prefix { get; set; }
+    public int Id { get; set; }
+    public string PhonePrefix { get; set; }
     public string PhoneNumber { get; set; }
     public string PhoneType { get; set; }
 
@@ -47,7 +52,8 @@ public class EmployeePhoneModel
 
     public EmployeePhoneModel(EmployeePhone phone)
     {
-        this.Prefix = phone.Prefix;
+        this.Id = phone.Id;
+        this.PhonePrefix = phone.PhonePrefix;
         this.PhoneNumber = phone.PhoneNumber;
         this.PhoneType = phone.PhoneType.ToString();
     }

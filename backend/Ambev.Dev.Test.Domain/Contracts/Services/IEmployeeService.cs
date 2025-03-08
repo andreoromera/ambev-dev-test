@@ -24,7 +24,13 @@ public interface IEmployeeService
     /// Creates the new employee using the provided employee data
     /// </summary>
     /// <exception cref="CustomException"></exception>
-    Task<int> Create(CreateEmployeeModel model, CancellationToken cancellationToken);
+    Task<int> Create(EmployeeManageModel model, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Updates an existing employee data
+    /// </summary>
+    /// <exception cref="CustomException"></exception>
+    Task Update(EmployeeManageModel model, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes the employee with the provided id

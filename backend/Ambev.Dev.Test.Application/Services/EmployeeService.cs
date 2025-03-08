@@ -5,7 +5,8 @@ using Ambev.Dev.Test.Domain.Models;
 using System.Security.Claims;
 using Ambev.Dev.Test.Domain.Entities;
 using LinqKit;
-using System.Linq.Expressions;
+using MapsterMapper;
+using Mapster;
 
 namespace Ambev.Dev.Test.Application.Services;
 
@@ -68,7 +69,7 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
     /// Creates the new employee using the provided employee data
     /// </summary>
     /// <exception cref="CustomException"></exception>
-    public async Task<int> Create(CreateEmployeeModel model, CancellationToken cancellationToken)
+    public async Task<int> Create(EmployeeManageModel model, CancellationToken cancellationToken)
     {
         //Is the informed email being already used by another employee?
         var emailAlreadyTaken = await employeeRepository.IsEmailAlreadyTaken(model.Email.ToLower(), cancellationToken);
@@ -83,7 +84,7 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         //Gets the logged in user/employee
         var me = await employeeRepository.GetById(loggedUserId, cancellationToken);
 
-        if (model.ActualRole > me.Role)
+        if (model.Role > me.Role)
             throw new CustomException("You cannot create an employee with a superior role than yours");
 
         //Maps and creates the employee in database
@@ -91,6 +92,47 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         await employeeRepository.Create(employee, cancellationToken);
 
         return employee.Id;
+    }
+
+    /// <summary>
+    /// Updates an existing employee data
+    /// </summary>
+    /// <exception cref="CustomException"></exception>
+    public async Task Update(EmployeeManageModel model, CancellationToken cancellationToken)
+    {
+        if (!model.Id.HasValue)
+            throw new CustomException("Employee not found");
+
+        //Gets the employee being updated
+        var employee = await employeeRepository.GetById(model.Id.Value, cancellationToken) ?? throw new CustomException("Employee not found");
+
+        if (!employee.Email.Equals(model.Email, StringComparison.CurrentCultureIgnoreCase))
+        {
+            //Is the informed email being already used by another employee?
+            var emailAlreadyTaken = await employeeRepository.IsEmailAlreadyTaken(model.Email.ToLower(), cancellationToken);
+            if (emailAlreadyTaken)
+                throw new CustomException("There is already an employee using this email. Please provide another one");
+        }
+
+        if (!employee.Document.Equals(model.Document))
+        {
+            //Is the informed document being already used by another employee?
+            var documentAlreadyTaken = await employeeRepository.IsDocumentAlreadyTaken(model.Document, cancellationToken);
+            if (documentAlreadyTaken)
+                throw new CustomException("There is already an employee using this document. Please provide another one");
+        }
+
+        //Gets the logged in user/employee
+        var me = await employeeRepository.GetById(loggedUserId, cancellationToken);
+
+        if (model.Role > me.Role)
+            throw new CustomException("You cannot create an employee with a superior role than yours");
+
+        //Maps and updates the employee
+        var config = new TypeAdapterConfig();
+        config.NewConfig<EmployeeManageModel, Employee>().IgnoreNullValues(true);
+        model.Adapt(employee, config);
+        await employeeRepository.Update(employee, cancellationToken);
     }
 
     /// <summary>

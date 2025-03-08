@@ -12,11 +12,4 @@ export default class Employee {
   passwordConfirm = '';
   role?: Role;
   phones: Phone[] = [];
-
-  //prettier-ignore
-  roleIsValid(loggedUserRoleId: number) {
-    return this.role
-        && this.role.id > 0
-        && this.role.id < loggedUserRoleId;
-  }
 }

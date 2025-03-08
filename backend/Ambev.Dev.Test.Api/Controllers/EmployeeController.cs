@@ -29,7 +29,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<EmployeeModel>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetOne(int id, CancellationToken cancellationToken)
@@ -39,13 +39,23 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<object>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Create([FromBody] CreateEmployeeModel model, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] EmployeeManageModel model, CancellationToken cancellationToken)
     {
         var employeeId = await employeeService.Create(model, cancellationToken);
         return Ok(new { employeeId });
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Update([FromBody] EmployeeManageModel model, CancellationToken cancellationToken)
+    {
+        await employeeService.Update(model, cancellationToken);
+        return Ok();
     }
 
     [HttpDelete("{id}")]

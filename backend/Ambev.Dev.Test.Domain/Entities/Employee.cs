@@ -23,20 +23,20 @@ public class Employee
     {
     }
 
-    public Employee(CreateEmployeeModel model)
+    public Employee(EmployeeManageModel model)
     {
         this.FirstName = model.FirstName;
         this.LastName = model.LastName;
         this.Document = model.Document.Replace("-", "").Replace(".", "").Replace("/", "");
-        this.Email = model.Email;
+        this.Email = model.Email.ToLowerInvariant();
         this.BirthDate = DateTime.Parse(model.BirthDate);
-        this.Role = model.ActualRole.Value;
+        this.Role = model.Role;
         this.SuperiorId = model.SuperiorId;
         this.CreationDate = DateTime.Now;
         this.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
         this.Phones = model.Phones.Select(phone => new EmployeePhone
         {
-            Prefix = phone.PhonePrefix,
+            PhonePrefix = phone.PhonePrefix,
             PhoneNumber = phone.PhoneNumber.Replace("-", ""),
             PhoneType = phone.ActualPhoneType,
         }).ToList();

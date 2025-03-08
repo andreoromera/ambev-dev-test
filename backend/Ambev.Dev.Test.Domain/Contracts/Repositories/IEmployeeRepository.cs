@@ -41,6 +41,11 @@ public interface IEmployeeRepository
     Task Create(Employee employee, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Updates the employee
+    /// </summary>
+    Task Update(Employee employee, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Deletes the employee
     /// </summary>
     public Task Delete(int id, CancellationToken cancellationToken);

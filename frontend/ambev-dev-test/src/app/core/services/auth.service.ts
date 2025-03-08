@@ -9,7 +9,7 @@ export class AuthService {
   private authSecretKey = 'auth';
 
   constructor() {
-    this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
+    this.isAuthenticated = !!sessionStorage.getItem(this.authSecretKey);
   }
 
   async login(email: string, password: string) {
@@ -27,7 +27,7 @@ export class AuthService {
         throw new Error(`Response status: ${response.status}`);
       }
 
-      localStorage.setItem(this.authSecretKey, JSON.stringify(await response.json()));
+      sessionStorage.setItem(this.authSecretKey, JSON.stringify(await response.json()));
       this.isAuthenticated = true;
       return true;
     } catch (error) {
@@ -41,11 +41,11 @@ export class AuthService {
   }
 
   getUserData() {
-    return JSON.parse(localStorage.getItem(this.authSecretKey)!);
+    return JSON.parse(sessionStorage.getItem(this.authSecretKey)!);
   }
 
   logout(): void {
-    localStorage.removeItem(this.authSecretKey);
+    sessionStorage.removeItem(this.authSecretKey);
     this.isAuthenticated = false;
   }
 }

@@ -107,7 +107,7 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddValidation(this IServiceCollection services)
     {
         services.AddScoped<IValidator<SignInCredentials>, SignInCredentialsValidator>();
-        services.AddScoped<IValidator<CreateEmployeeModel>, CreateEmployeeModelValidator>();
+        services.AddScoped<IValidator<EmployeeManageModel>, CreateEmployeeModelValidator>();
         services.AddFluentValidationAutoValidation();
         return services;
     }

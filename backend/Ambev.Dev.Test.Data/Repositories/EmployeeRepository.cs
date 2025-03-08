@@ -76,6 +76,15 @@ public class EmployeeRepository(DefaultContext context) : IEmployeeRepository
     }
 
     /// <summary>
+    /// Updates the employee
+    /// </summary>
+    public async Task Update(Employee employee, CancellationToken cancellationToken)
+    {
+        context.Update(employee);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <summary>
     /// Deletes the employee
     /// </summary>
     public async Task Delete(int id, CancellationToken cancellationToken)
