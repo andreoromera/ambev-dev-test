@@ -5,7 +5,6 @@ using Ambev.Dev.Test.Domain.Models;
 using System.Security.Claims;
 using Ambev.Dev.Test.Domain.Entities;
 using LinqKit;
-using MapsterMapper;
 using Mapster;
 
 namespace Ambev.Dev.Test.Application.Services;
@@ -15,6 +14,11 @@ namespace Ambev.Dev.Test.Application.Services;
 /// </summary>
 public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository employeeRepository) : IEmployeeService
 {
+    private const string emailAlreadyUsedMessage = "There is already an employee using this email. Please provide another one";
+    private const string documentAlreadyUsedMessage = "There is already an employee using this document. Please provide another one";
+    private const string employeeWithSuperiorRoleMessage = "You cannot create an employee with a superior role than yours";
+    private const string employeeNotFoundMessage = "Employee not found";
+    private const string invalidIdMessage = "Invalid id";
     private readonly int loggedUserId = int.Parse(principal.FindFirst(ClaimTypes.NameIdentifier).Value);
 
     /// <summary>
@@ -56,12 +60,12 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
     public async Task<EmployeeModel> GetById(int id, CancellationToken cancellationToken)
     {
         if (id <= 0)
-            throw new CustomException("Invalid id");
+            throw new CustomException(invalidIdMessage);
 
        var employee = await employeeRepository.GetById(id, cancellationToken);
 
         return employee is null 
-            ? throw new CustomException("Employee not found") 
+            ? throw new CustomException(employeeNotFoundMessage) 
             : new EmployeeModel(employee);
     }
 
@@ -74,18 +78,18 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         //Is the informed email being already used by another employee?
         var emailAlreadyTaken = await employeeRepository.IsEmailAlreadyTaken(model.Email.ToLower(), cancellationToken);
         if (emailAlreadyTaken)
-            throw new CustomException("There is already an employee using this email. Please provide another valid email");
+            throw new CustomException(emailAlreadyUsedMessage);
 
         //Is the informed document being already used by another employee?
         var documentAlreadyTaken = await employeeRepository.IsDocumentAlreadyTaken(model.Document, cancellationToken);
         if (documentAlreadyTaken)
-            throw new CustomException("There is already an employee using this document. Please provide another valid document");
+            throw new CustomException(documentAlreadyUsedMessage);
 
         //Gets the logged in user/employee
         var me = await employeeRepository.GetById(loggedUserId, cancellationToken);
 
         if (model.Role > me.Role)
-            throw new CustomException("You cannot create an employee with a superior role than yours");
+            throw new CustomException(employeeWithSuperiorRoleMessage);
 
         //Maps and creates the employee in database
         var employee = new Employee(model);
@@ -101,17 +105,17 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
     public async Task Update(EmployeeManageModel model, CancellationToken cancellationToken)
     {
         if (!model.Id.HasValue)
-            throw new CustomException("Employee not found");
+            throw new CustomException(employeeNotFoundMessage);
 
         //Gets the employee being updated
-        var employee = await employeeRepository.GetById(model.Id.Value, cancellationToken) ?? throw new CustomException("Employee not found");
+        var employee = await employeeRepository.GetById(model.Id.Value, cancellationToken) ?? throw new CustomException(employeeNotFoundMessage);
 
         if (!employee.Email.Equals(model.Email, StringComparison.CurrentCultureIgnoreCase))
         {
             //Is the informed email being already used by another employee?
             var emailAlreadyTaken = await employeeRepository.IsEmailAlreadyTaken(model.Email.ToLower(), cancellationToken);
             if (emailAlreadyTaken)
-                throw new CustomException("There is already an employee using this email. Please provide another one");
+                throw new CustomException(emailAlreadyUsedMessage);
         }
 
         if (!employee.Document.Equals(model.Document))
@@ -119,14 +123,14 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
             //Is the informed document being already used by another employee?
             var documentAlreadyTaken = await employeeRepository.IsDocumentAlreadyTaken(model.Document, cancellationToken);
             if (documentAlreadyTaken)
-                throw new CustomException("There is already an employee using this document. Please provide another one");
+                throw new CustomException(documentAlreadyUsedMessage);
         }
 
         //Gets the logged in user/employee
         var me = await employeeRepository.GetById(loggedUserId, cancellationToken);
 
         if (model.Role > me.Role)
-            throw new CustomException("You cannot create an employee with a superior role than yours");
+            throw new CustomException(employeeWithSuperiorRoleMessage);
 
         //Maps and updates the employee
         var config = new TypeAdapterConfig();
@@ -142,7 +146,7 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
     public async Task Delete(int id, CancellationToken cancellationToken)
     {
         if (id <= 0)
-            throw new CustomException("Invalid id");
+            throw new CustomException(invalidIdMessage);
 
         if (id == 1)
             throw new CustomException("Superuser cannot be deleted");
@@ -151,7 +155,7 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         var exists = await employeeRepository.Exists(id, cancellationToken);
 
         if (!exists)
-            throw new CustomException("Employee not found");
+            throw new CustomException(employeeNotFoundMessage);
 
         await employeeRepository.Delete(id, cancellationToken);
     }
