@@ -6,13 +6,14 @@ using System.Security.Claims;
 using Ambev.Dev.Test.Domain.Entities;
 using LinqKit;
 using Mapster;
+using Microsoft.Extensions.Logging;
 
 namespace Ambev.Dev.Test.Application.Services;
 
 /// <summary>
 /// Employee Service
 /// </summary>
-public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository employeeRepository) : IEmployeeService
+public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository employeeRepository, ILogger<EmployeeService> logger) : IEmployeeService
 {
     private const string emailAlreadyUsedMessage = "There is already an employee using this email. Please provide another one";
     private const string documentAlreadyUsedMessage = "There is already an employee using this document. Please provide another one";
@@ -46,11 +47,17 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         if (!string.IsNullOrEmpty(lastName))
             expression.And(x => x.LastName.ToLower().Contains(lastName.ToLower()));
 
+
+        logger.LogInformation("Searching for employees");
         var employees = await employeeRepository.Search(expression, cancellationToken);
 
-        return employees
+        var list = employees
             .Select(x => new EmployeeModel(x))
             .ToList();
+
+        logger.LogInformation($"{list.Count} employees found");
+
+        return list;
     }
 
     /// <summary>
@@ -78,12 +85,18 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         //Is the informed email being already used by another employee?
         var emailAlreadyTaken = await employeeRepository.IsEmailAlreadyTaken(model.Email.ToLower(), cancellationToken);
         if (emailAlreadyTaken)
+        {
+            logger.LogWarning($"Tried to update employee's email but the provided email is already taken'");
             throw new CustomException(emailAlreadyUsedMessage);
+        }
 
         //Is the informed document being already used by another employee?
         var documentAlreadyTaken = await employeeRepository.IsDocumentAlreadyTaken(model.Document, cancellationToken);
         if (documentAlreadyTaken)
+        {
+            logger.LogWarning($"Tried to update employee's document but the provided document is already taken'");
             throw new CustomException(documentAlreadyUsedMessage);
+        }
 
         //Gets the logged in user/employee
         var me = await employeeRepository.GetById(loggedUserId, cancellationToken);
@@ -115,7 +128,10 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
             //Is the informed email being already used by another employee?
             var emailAlreadyTaken = await employeeRepository.IsEmailAlreadyTaken(model.Email.ToLower(), cancellationToken);
             if (emailAlreadyTaken)
+            {
+                logger.LogWarning($"Tried to update employee's email but the provided email is already taken'");
                 throw new CustomException(emailAlreadyUsedMessage);
+            }
         }
 
         if (!employee.Document.Equals(model.Document))
@@ -123,16 +139,22 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
             //Is the informed document being already used by another employee?
             var documentAlreadyTaken = await employeeRepository.IsDocumentAlreadyTaken(model.Document, cancellationToken);
             if (documentAlreadyTaken)
+            {
+                logger.LogWarning($"Tried to update employee's document but the provided document is already taken'");
                 throw new CustomException(documentAlreadyUsedMessage);
+            }
         }
 
         //Gets the logged in user/employee
+        logger.LogInformation($"Querying logged user data");
         var me = await employeeRepository.GetById(loggedUserId, cancellationToken);
 
+        logger.LogInformation($"Validating role rules");
         if (model.Role > me.Role)
             throw new CustomException(employeeWithSuperiorRoleMessage);
 
         //Maps and updates the employee
+        logger.LogInformation($"Updating the employee");
         var config = new TypeAdapterConfig();
         config.NewConfig<EmployeeManageModel, Employee>().Ignore(x => x.Password);
         model.Adapt(employee, config);
@@ -155,8 +177,12 @@ public class EmployeeService(ClaimsPrincipal principal, IEmployeeRepository empl
         var exists = await employeeRepository.Exists(id, cancellationToken);
 
         if (!exists)
+        {
+            logger.LogWarning($"Employee not found");
             throw new CustomException(employeeNotFoundMessage);
+        }
 
+        logger.LogInformation($"Deleting the employee");
         await employeeRepository.Delete(id, cancellationToken);
     }
 }

@@ -9,13 +9,14 @@ using Ambev.Dev.Test.Domain.Entities;
 using Ambev.Dev.Test.Domain.Exceptions;
 using Microsoft.Extensions.Options;
 using Ambev.Dev.Test.Domain.Configs;
+using Microsoft.Extensions.Logging;
 
 namespace Ambev.Dev.Test.Application.Services;
 
 /// <summary>
 /// Authentication Service
 /// </summary>
-public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IEmployeeRepository employeeRepository) : IAuthService
+public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IEmployeeRepository employeeRepository, ILogger<AuthService> logger) : IAuthService
 {
     private readonly JwtConfig jwtConfigOptions = jwtConfigOptions.Value;
 
@@ -28,15 +29,20 @@ public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IEmployeeReposito
     /// <exception cref="CustomException"></exception>
     public async Task<SignInResponse> SignIn(SignInCredentials credentials, CancellationToken cancellationToken)
     {
+        logger.LogInformation($"Trying to sign the employee in");
+
         var employee = await employeeRepository.GetByEmail(credentials.Email, cancellationToken);
 
         if (employee is not null)
         {
+            logger.LogInformation($"Employee found, validating password");
             var verified = BCrypt.Net.BCrypt.Verify(credentials.Password, employee.Password);
 
             if (verified)
             {
-                return new()
+                logger.LogInformation($"Password OK");
+
+                var response = new SignInResponse()
                 {
                     Id =  employee.Id,
                     FirstName =  employee.FirstName,
@@ -45,9 +51,14 @@ public class AuthService(IOptions<JwtConfig> jwtConfigOptions, IEmployeeReposito
                     Role = employee.Role.ToString(),
                     Token = GenerateToken(employee)
                 };
+
+                logger.LogInformation("Logged user data {@response}", response);
+
+                return response;
             }
         }
 
+        logger.LogWarning($"Invalid Credentials");
         throw new CustomException("Invalid Credentials");
     }
 

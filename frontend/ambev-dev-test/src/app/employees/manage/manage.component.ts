@@ -119,7 +119,7 @@ export default class EmployeeManagePageComponent implements OnInit {
   roleIsValid() {
     return this.employee!.role
         && this.employee!.role.id > 0
-        && this.employee!.role.id < this.loggedUserRoleId;
+        && this.employee!.role.id <= this.loggedUserRoleId;
   }
 
   compareFn(c1: any, c2: any): boolean {

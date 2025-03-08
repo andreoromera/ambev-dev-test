@@ -18,6 +18,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Enrichers.Sensitive;
+using Serilog.Sinks.SystemConsole.Themes;
 using System.Text;
 using System.Text.Json;
 
@@ -109,6 +112,21 @@ public static class IServiceCollectionExtensions
         services.AddScoped<IValidator<SignInCredentials>, SignInCredentialsValidator>();
         services.AddScoped<IValidator<EmployeeManageModel>, CreateEmployeeModelValidator>();
         services.AddFluentValidationAutoValidation();
+        return services;
+    }
+
+    public static IServiceCollection AddLogs(this IServiceCollection services)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.WithSensitiveDataMasking(options =>
+            {
+                options.MaskValue = "***REDACTED***";
+                options.MaskProperties.Add("token");
+            })
+            .WriteTo.Console(theme: SystemConsoleTheme.Colored)
+            .CreateLogger();
+
+        services.AddSerilog();
         return services;
     }
 }

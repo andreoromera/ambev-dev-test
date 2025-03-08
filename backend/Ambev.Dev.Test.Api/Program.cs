@@ -3,7 +3,6 @@ using Ambev.Dev.Test.Data;
 using Ambev.Dev.Test.IoC.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +14,7 @@ builder.Services.AddConfigs();
 builder.Services.AddAuth();
 builder.Services.AddDatabase();
 builder.Services.AddValidation();
+builder.Services.AddLogs();
 
 //Configuring error handling
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
