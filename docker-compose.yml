@@ -37,7 +37,8 @@ services:
         condition: service_healthy
         restart: true
 
-  ambev_dev_test:
+  ambev_dev_test_frontend:
+    container_name: ambev_dev_test_frontend
     image: ambev_dev_test_frontend
     build:
       context: ./frontend/ambev-dev-test
